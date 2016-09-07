@@ -1,0 +1,15 @@
+{
+  "name": "health-stats-application",
+  "version": "1.0.0",
+  "description": "Its a Health statistics application",
+  "main": "server.js",
+  "author": "Balachandar",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.4",
+    "fast-csv": "^2.1.0",
+    "hashmap": "^2.0.6",
+    "method-override": "^2.3.6",
+    "morgan": "^1.6.1"
+  }
+}
