@@ -70,7 +70,7 @@
             <div class="header-content-inner">
                 <h1 id="homeHeading">Health Statistics Application</h1>
                 <hr>
-                <p>This application displays the Smoking and Poor Mental Health Statistics details.<br/>
+                <p>This application displays the Smoking,Poor Mental Health and Obesity Statistics details.<br/>
                     The statistics are displayed per gender and also Race/Ethnicity. </p>
                 <a href="#about" class="btn btn-primary btn-xl page-scroll">Click Here to view</a>
             </div>
@@ -109,7 +109,7 @@
                     </div>
                     <div id="smoking-piechart-race" style="width: 50%; height: 433px;float:right;">
                         <h2 class="section-heading">Smoking Race/Ethnicity</h2>
-                        Note that the data does not have values for all races.
+                       Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     </div>
                     <hr class="primary">
                 </div>
@@ -149,7 +149,50 @@
                     </div>
                     <div id="mentalhealth-piechart-race" style="width: 50%; height: 433px;float:right;">
                         <h2 class="section-heading">Poor Mental Health Stats by Race/Ethnicity</h2>
-                        Note that the data does not have values for all races.
+                        Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
+                    </div>
+                    <hr class="primary">
+                </div>
+            </div>
+        </div>
+    </section>
+
+ <section class="bg-primary">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Obesity Adults Statistics Map across US states</h2>
+                    <hr class="light">
+                    <div id="obesity-geochart-colors" style="width: 800px; height: 433px;"></div>
+                    <br/>
+                    <br/>
+                    <p class="text-faded">
+                         An adult who has a BMI between 25 and 29.9 is considered overweight. An adult who has a BMI of 30 or higher is considered obese.
+                        <br/>
+                          Data based on the Behavioral Risk Factor Surveillance System, an ongoing, state-based, random-digit-dialed telephone survey of non-institutionalized civilian adults aged 18 years 
+                          and older. Information about the BRFSS is available at http://www.cdc.gov/brfss/index.html.
+                        <br/>
+                        <B>Source:</B><br/>
+                        KCMU analysis of the Centers for Disease Control and Prevention (CDC)'s Behavioral Risk Factor Surveillance System (BRFSS) 2014 Survey Results.<br/>
+                        http://kff.org/state-category/health-status/mental-health
+                    </p>
+                    <a href="#obesity-stats" id="obesity-stats-link" class="page-scroll btn btn-default btn-xl sr-button" style="display:none;"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="obesity-stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center" >
+                    <h1>Current State:<span id="obesity-currentState"></span></h1>
+                    <div id="obesity-piechart-gender" style="width: 50%; height: 433px;float:left;">
+                        <h2 class="section-heading">Obesity Stats by Gender</h2>
+                    </div>
+                    <div id="obesity-piechart-race" style="width: 50%; height: 433px;float:right;">
+                        <h2 class="section-heading">Obesity Stats by Race/Ethnicity</h2>
+                        Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     </div>
                     <hr class="primary">
                 </div>
@@ -193,233 +236,7 @@
     <script src="js/creative.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script>
-        google.charts.load('current', {'packages': ['geochart', 'corechart']});
-        google.charts.setOnLoadCallback(drawSmokingRegionsMap);
-        google.charts.setOnLoadCallback(drawMentalHealthRegionsMap);
-
-        function drawSmokingRegionsMap() {
-            var jsonData = $.ajax({
-                url: "/api/stats/smoking",
-                dataType: "json",
-                async: false
-            }).responseText;
-
-            var contentAsArray = JSON.parse(jsonData);
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'State');
-            dataTable.addColumn('number', 'Adults %');
-
-            for (var i = 0; i < contentAsArray.length; i++) {
-                dataTable.addRow([contentAsArray[i].location, parseFloat(contentAsArray[i].percentage)]);
-            }
-
-            var options = {
-                region: 'US',
-                resolution: 'provinces',
-                backgroundColor: '#81d4fa',
-                colorAxis: {colors: ['#00853f', '#e31b23']},
-                datalessRegionColor: '#f8bbd0',
-                enableRegionInteractivity: true,
-                tooltip : { trigger : 'focus'},
-                defaultColor: '#f5f5f5'
-            };
-            var chart = new google.visualization.GeoChart(document.getElementById('smoking-geochart-colors'));
-            chart.draw(dataTable, options);
-            google.visualization.events.addListener(chart, 'select', selectHandler);
-
-            //Default state is Ohio
-            chart.setSelection([{row:1, column:1}]);
-            $('#smoking-currentState').text('Ohio');
-            drawSmokingGenderChart('Ohio');
-            drawSmokingRaceChart('Ohio');
-
-            function selectHandler(e) {
-                var selection = chart.getSelection();
-                var state = '';
-                for (var i = 0; i < selection.length; i++) {
-                    var item = selection[i];
-                    if (item.row != null && item.column != null) {
-                        state = dataTable.getFormattedValue(item.row, item.column);
-                    } else if (item.row != null) {
-                        state = dataTable.getFormattedValue(item.row, 0);
-                    } else if (item.column != null) {
-                        state = dataTable.getFormattedValue(0, item.column);
-                    }
-                }
-                if (state == '') {
-                    state = 'nothing';
-                }
-                $('#smoking-stats-link').click();
-                console.log(state);
-                drawSmokingGenderChart(state);
-                drawSmokingRaceChart(state);
-                $('#smoking-currentState').text(state);
-            }
-        }
-
-        function drawSmokingGenderChart(state) {
-
-            var jsonData = $.ajax({
-                url: "/api/stats/smoking/gender/"+state,
-                dataType: "json",
-                async: false
-            }).responseText;
-
-            var content = JSON.parse(jsonData);
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'Gender');
-            dataTable.addColumn('number', 'Gender %');
-            dataTable.addRow(['Male', parseFloat(content.male)]);
-            dataTable.addRow(['Female', parseFloat(content.female)]);
-
-            var options = {
-                title: 'Statistics by Gender',
-                is3D: true
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('smoking-piechart-gender'));
-            chart.draw(dataTable, options);
-        }
-
-        function drawSmokingRaceChart(state) {
-
-            var jsonData = $.ajax({
-                url: "/api/stats/smoking/race/"+state,
-                dataType: "json",
-                async: false
-            }).responseText;
-
-            var content = JSON.parse(jsonData);
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'Race');
-            dataTable.addColumn('number', 'Race %');
-
-            dataTable.addRow(['White', parseFloat(content.white)]);
-            dataTable.addRow(['Black', parseFloat(content.black)]);
-            dataTable.addRow(['Hispanic', parseFloat(content.hispanic)]);
-            dataTable.addRow(['Asian/Native Hawaiian and Pacific Islander', parseFloat(content.asianHawPac)]);
-            dataTable.addRow(['American Indian/Alaska Native', parseFloat(content.nativeAmerican)]);
-            dataTable.addRow(['Other', parseFloat(content.other)]);
-            dataTable.addRow(['All Adults', parseFloat(content.allAdults)]);
-            var options = {
-                title: 'Statistics by Race',
-                sliceVisibilityThreshold:0,
-                is3D: true
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('smoking-piechart-race'));
-            chart.draw(dataTable, options);
-        }
-
-        function drawMentalHealthRegionsMap() {
-            var jsonData = $.ajax({
-                url: "/api/stats/mentalhealth",
-                dataType: "json",
-                async: false
-            }).responseText;
-
-            var contentAsArray = JSON.parse(jsonData);
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'State');
-            dataTable.addColumn('number', 'Adults %');
-
-            for (var i = 0; i < contentAsArray.length; i++) {
-                dataTable.addRow([contentAsArray[i].location, parseFloat(contentAsArray[i].mentalHealth)]);
-            }
-            var options = {
-                region: 'US',
-                resolution: 'provinces',
-                backgroundColor: '#81d4fa',
-                colorAxis: {colors: ['#00853f', '#e31b23']},
-                datalessRegionColor: '#f8bbd0',
-                enableRegionInteractivity: true,
-                tooltip : { trigger : 'focus'},
-                defaultColor: '#f5f5f5'
-            };
-            var chart = new google.visualization.GeoChart(document.getElementById('mentalhealth-geochart-colors'));
-            chart.draw(dataTable, options);
-            google.visualization.events.addListener(chart, 'select', selectHandler);
-            
-            //Default state is Ohio
-            //chart.setSelection([{row:1, column:1}]);
-            $('#mentalhealth-currentState').text('Ohio');
-            drawMentalHealthGenderChart('Ohio');
-            drawMentalHealthRaceChart('Ohio');
-
-            function selectHandler(e) {
-                var selection = chart.getSelection();
-                var state = '';
-                for (var i = 0; i < selection.length; i++) {
-                    var item = selection[i];
-                    if (item.row != null && item.column != null) {
-                        state = dataTable.getFormattedValue(item.row, item.column);
-                    } else if (item.row != null) {
-                        state = dataTable.getFormattedValue(item.row, 0);
-                    } else if (item.column != null) {
-                        state = dataTable.getFormattedValue(0, item.column);
-                    }
-                }
-                if (state == '') {
-                    state = 'nothing';
-                }
-                $('#mentalhealth-stats-link').click();                
-                console.log(state);
-                drawMentalHealthGenderChart(state);
-                drawMentalHealthRaceChart(state);
-                $('#mentalhealth-currentState').text(state);
-            }
-        }
-
-        function drawMentalHealthGenderChart(state) {
-
-            var jsonData = $.ajax({
-                url: "/api/stats/mentalhealth/gender/"+state,
-                dataType: "json",
-                async: false
-            }).responseText;
-
-            var content = JSON.parse(jsonData);
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'Gender');
-            dataTable.addColumn('number', 'Gender %');
-            dataTable.addRow(['Male', parseFloat(content.male)]);
-            dataTable.addRow(['Female', parseFloat(content.female)]);
-
-            var options = {
-                title: 'Statistics by Gender',
-                is3D: true
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('mentalhealth-piechart-gender'));
-            chart.draw(dataTable, options);
-        }
-
-        function drawMentalHealthRaceChart(state) {
-
-            var jsonData = $.ajax({
-                url: "/api/stats/mentalhealth/race/"+state,
-                dataType: "json",
-                async: false
-            }).responseText;
-
-            var content = JSON.parse(jsonData);
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'Race');
-            dataTable.addColumn('number', 'Race %');
-
-            dataTable.addRow(['White', parseFloat(content.white)]);
-            dataTable.addRow(['Black', parseFloat(content.black)]);
-            dataTable.addRow(['Hispanic', parseFloat(content.hispanic)]);
-            dataTable.addRow(['Asian/Native Hawaiian and Pacific Islander', parseFloat(content.asianHawPac)]);
-            dataTable.addRow(['American Indian/Alaska Native', parseFloat(content.nativeAmerican)]);
-            dataTable.addRow(['Other', parseFloat(content.other)]);
-            var options = {
-                title: 'Statistics by Race',
-                sliceVisibilityThreshold:0,
-                is3D: true,
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('mentalhealth-piechart-race'));
-            chart.draw(dataTable, options);
-        }
-    </script>
+    <script src="js/chartstats.js"></script>    
 </body>
 
 </html>

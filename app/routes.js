@@ -8,7 +8,7 @@ module.exports = function (app) {
     var allSmokingStats = [];
     var HashMap = require('hashmap');
     var genderSmokingStatsMap = new HashMap();
-    var raceSmokingStatsMap = new HashMap();
+    var raceSmokingStatsMap = new HashMap();    
 
     csv.fromPath("./app/resources/smoking_adults_stats.csv", {headers: true})
         .on("data", function (data) {
@@ -54,7 +54,6 @@ module.exports = function (app) {
     //Mental health stats
 
     var allPoorMentalHealthStats = [];
-    var HashMap = require('hashmap');
     var genderPoorMentalHealthStatsMap = new HashMap();
     var racePoorMentalHealthStatsMap = new HashMap();
 
@@ -97,13 +96,61 @@ module.exports = function (app) {
             console.log("done");
         });
 
+    // Obesity
+
+    var allObesityStats = [];    
+    var genderObesityStatsMap = new HashMap();
+    var raceObesityStatsMap = new HashMap();
+
+    csv.fromPath("./app/resources/obesity_adults_stats.csv", {headers: true})
+        .on("data", function (data) {
+            var stats = {};
+            stats['location'] = data.Location;
+            stats['percentage'] = formatData(data['Adult Overweight/Obesity Rate'])
+            allObesityStats.push(stats);
+        })
+        .on("end", function () {
+            console.log("done");
+        });
+
+    csv.fromPath("./app/resources/obesity_gender_stats.csv", {headers: true})
+        .on("data", function (data) {
+            var stats = {};
+            stats['location'] = data.Location;
+            stats['male'] = formatData(data.Male);
+            stats['female'] = formatData(data.Female);
+            genderObesityStatsMap.set(data.Location, stats);
+        })
+        .on("end", function () {
+            console.log("done");
+        });
+
+    csv.fromPath("./app/resources/obesity_race_stats.csv", {headers: true})
+        .on("data", function (data) {
+            var stats = {};
+            stats['location'] = data.Location;
+            stats['white'] = formatData(data.White);
+            stats['black'] = formatData(data.Black);
+            stats['hispanic'] = formatData(data.Hispanic);
+            stats['asianHawPac'] = formatData(data["Asian/Native Hawaiian and Pacific Islander"]);
+            stats['nativeAmerican'] = formatData(data["American Indian/Alaska Native"]);
+            stats['other'] = formatData(data.Other);
+            stats['allAdults'] = formatData(data["All Adults"]);
+            raceObesityStatsMap.set(data.Location, stats);
+        })
+        .on("end", function () {
+            console.log("done");
+        });
+
     app.get('/api/stats/:type', function (req, res) {
 
         if ("smoking" == req.params.type.toString()) {
             res.json(allSmokingStats);
         } else if ("mentalhealth" == req.params.type.toString()) {
             res.json(allPoorMentalHealthStats);
-        } else {
+        } else if ("obesity" == req.params.type.toString()){
+            res.json(allObesityStats);
+        }else{
             res.json("Invalid type has been sent");
         }
     });
@@ -114,6 +161,8 @@ module.exports = function (app) {
             res.json(genderSmokingStatsMap.get(req.params.state));
         } else if ("mentalhealth" == req.params.type.toString()) {
             res.json(genderPoorMentalHealthStatsMap.get(req.params.state));
+        }else if ("obesity" == req.params.type.toString()) {
+            res.json(genderObesityStatsMap.get(req.params.state));
         } else {
             res.json("Invalid type has been sent");
         }
@@ -124,6 +173,8 @@ module.exports = function (app) {
             res.json(raceSmokingStatsMap.get(req.params.state));
         } else if ("mentalhealth" == req.params.type.toString()) {
             res.json(racePoorMentalHealthStatsMap.get(req.params.state));
+        }else if ("obesity" == req.params.type.toString()) {
+            res.json(raceObesityStatsMap.get(req.params.state));
         } else {
             res.json("Invalid type has been sent");
         }
