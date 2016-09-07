@@ -53,7 +53,7 @@
                         <a class="page-scroll" href="#about">About</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#smoking-stats-map">Statistics</a>
+                        <a class="page-scroll" href="#stats">Statistics</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
@@ -66,22 +66,22 @@
     </nav>
 
     <header>
-        <div class="header-content">
+        <div class="header-content" id="about">
             <div class="header-content-inner">
                 <h1 id="homeHeading">Health Statistics Application</h1>
                 <hr>
-                <p>This application displays the Smoking,Poor Mental Health and Obesity Statistics details.<br/>
+                <p>This application displays the Smoking,Asthma, Poor Mental Health and Obesity Statistics details.<br/>
                     The statistics are displayed per gender and also Race/Ethnicity. </p>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll">Click Here to view</a>
+                <a href="#stats" class="btn btn-primary btn-xl page-scroll">Click Here to view</a>
             </div>
         </div>
     </header>
 
-    <section class="bg-primary" id="about">
+    <section class="bg-primary" id="stats">
         <div class="container" id="smoking-stats-map">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Smoking Adults Statistics Map across US states</h2>
+                    <h2 class="section-heading">Smoking Adults Statistics Map across US states(2014)</h2>
                     <hr class="light">
                     <div id="smoking-geochart-colors" style="width: 800px; height: 433px;"></div>
                     <br/>
@@ -103,14 +103,50 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center" >
-                    <h1>Current State:<span id="smoking-currentState"></span></h1>
+                    <h2>Current State:<span id="smoking-currentState"></span></h2>
                     <div id="smoking-piechart-gender" style="width: 50%; height: 433px;float:left;">
-                        <h2 class="section-heading">Smoking Stats by Gender</h2>
                     </div>
                     <div id="smoking-piechart-race" style="width: 50%; height: 433px;float:right;">
-                        <h2 class="section-heading">Smoking Race/Ethnicity</h2>
-                       Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     </div>
+                    Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
+                    <hr class="primary">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-primary">
+        <div class="container" id="asthma-stats-map">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Adult Self-Reported Current Asthma Prevalence Rate Statistics Map across US states(2014)</h2>
+                    <hr class="light">
+                    <div id="asthma-geochart-colors" style="width: 800px; height: 433px;"></div>
+                    <br/>
+                    <br/>
+                    <p class="text-faded">
+                        Data represent adults who reported that they have been told by a doctor that they have asthma. Percentages are weighted to reflect population characteristics.<br/>
+                        <br/>
+                        <B>Source:</B><br/>
+                        KCMU analysis of the Centers for Disease Control and Prevention (CDC)'s Behavioral Risk Factor Surveillance System (BRFSS) 2014 Survey Results.<br/>
+                        http://kff.org/state-category/health-status/asthma
+                    </p>
+                    <a href="#asthma-stats" id="asthma-stats-link" class="page-scroll btn btn-default btn-xl sr-button" style="display:none;"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="asthma-stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center" >
+                    <h2>Current State:<span id="asthma-currentState"></span></h2>
+                    <div id="asthma-piechart-gender" style="width: 50%; height: 433px;float:left;">
+                    </div>
+                    <div id="asthma-piechart-race" style="width: 50%; height: 433px;float:right;">
+                    </div>
+                    Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     <hr class="primary">
                 </div>
             </div>
@@ -121,7 +157,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Poor Mental Adults Statistics Map across US states</h2>
+                    <h2 class="section-heading">Poor Mental Adults Statistics Map across US states(2014)</h2>
                     <hr class="light">
                     <div id="mentalhealth-geochart-colors" style="width: 800px; height: 433px;"></div>
                     <br/>
@@ -143,14 +179,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center" >
-                    <h1>Current State:<span id="mentalhealth-currentState"></span></h1>
+                    <h2>Current State:<span id="mentalhealth-currentState"></span></h2>
                     <div id="mentalhealth-piechart-gender" style="width: 50%; height: 433px;float:left;">
-                        <h2 class="section-heading">Poor Mental Health Stats by Gender</h2>
                     </div>
                     <div id="mentalhealth-piechart-race" style="width: 50%; height: 433px;float:right;">
-                        <h2 class="section-heading">Poor Mental Health Stats by Race/Ethnicity</h2>
-                        Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     </div>
+                    Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     <hr class="primary">
                 </div>
             </div>
@@ -161,7 +195,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Obesity Adults Statistics Map across US states</h2>
+                    <h2 class="section-heading">Obesity Adults Statistics Map across US states(2014)</h2>
                     <hr class="light">
                     <div id="obesity-geochart-colors" style="width: 800px; height: 433px;"></div>
                     <br/>
@@ -186,14 +220,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center" >
-                    <h1>Current State:<span id="obesity-currentState"></span></h1>
+                    <h2>Current State:<span id="obesity-currentState"></span></h2>
                     <div id="obesity-piechart-gender" style="width: 50%; height: 433px;float:left;">
-                        <h2 class="section-heading">Obesity Stats by Gender</h2>
                     </div>
                     <div id="obesity-piechart-race" style="width: 50%; height: 433px;float:right;">
-                        <h2 class="section-heading">Obesity Stats by Race/Ethnicity</h2>
-                        Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     </div>
+                    Not sufficient data available for some Race/Ethnicity. So we show only the available data in the chart and show the Race/Ethnicity in the datapoints.
                     <hr class="primary">
                 </div>
             </div>
