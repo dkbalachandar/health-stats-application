@@ -80,7 +80,7 @@ function drawSmokingGenderChart(state) {
     dataTable.addRow(['Female', parseFloat(content.female)]);
 
     var options = {
-        title: 'Statistics by Gender',
+        title: 'Smoking Stats by Gender',
         is3D: true
     };
     var chart = new google.visualization.PieChart(document.getElementById('smoking-piechart-gender'));
